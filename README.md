@@ -6,6 +6,43 @@ Minify your files based on their filetype.
 
 __Documentation__
 
+[Gem](http://rubydoc.info/gems/minify/0.1.0/frames)  
+[GitHub](http://rubydoc.info/github/c00lryguy/minify)
+
+__Installation__
+
+`gem install minify`
+
+## Usage
+
+__Minify Strings__
+
+    Minify::Parser.call("text/html", "<html>    <head></head>   </html>")
+    # => "<html><head></head></html>"
+
+This is the same as:
+
+    Minify::Parser.html("<html>    <head></head>   </html>")
+
+__Minify Directories__
+
+    Minify.minimize('public/index.html', 'public/js/**/*')
+
+This will copy the files to `./.minimize-cache` and minimize the original files. 
+If the file we're trying to minimize already exists in the cache and the mtime 
+is the same, we leave it alone.
+
+Remember to add `.minimize-cache/**/*` to your `.gitignore` file.
+
+    Minify.maximize('public/index.html', 'public/js/**/*')
+
+If the file we're trying to maximize is in `./.minimize-cache`, then we return 
+that files's contents. If not, we simply return it's contents.
+
+Minify also acts as Rack middleware, although this bypasses caching:
+
+    use Minify
+
 
 ## Contributing to gemology
 
