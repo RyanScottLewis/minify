@@ -39,10 +39,11 @@ Remember to add `.minimize-cache/**/*` to your `.gitignore` file.
 If the file we're trying to maximize is in `./.minimize-cache`, then we return 
 that files's contents. If not, we simply return it's contents.
 
-Minify also acts as Rack middleware, although this bypasses caching:
+__Minify Rack Responses__
+
+Minify also acts as Rack middleware:
 
     use Minify
-
 
 ## Contributing to gemology
 
