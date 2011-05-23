@@ -2,7 +2,7 @@
 
 __min·i·fy__ _verb_ _\ˈmi-nə-ˌfī\_ __:__ To minimize or reduce.
 
-Minify your files based on their filetype.
+Minify your files/strings/rack responses based on their mime type.
 
 __Documentation__
 
