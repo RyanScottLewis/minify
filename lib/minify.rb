@@ -20,6 +20,5 @@ end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'core_ext/string'
-require 'minify/parser/instance_methods'
 require 'minify/parser/class_methods'
 require 'minify/parser/registered_mime_types'
