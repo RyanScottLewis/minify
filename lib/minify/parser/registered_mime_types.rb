@@ -1,9 +1,5 @@
 class Minify
   class Parser
-  
-    register 'text/plain' do |input|
-      input.trim.strip
-    end
     
     register 'text/html' do |input, options={}|
       require 'tidy_ffi'

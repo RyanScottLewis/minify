@@ -15,14 +15,36 @@ __Installation__
 
 ## Usage
 
-__Minify Strings__
+__Minify Strings By Mime Type__
+
+    Minify::Parser.html("<html>    <head></head>   </html>")
+
+This is the same as:
 
     Minify::Parser.call("text/html", "<html>    <head></head>   </html>")
     # => "<html><head></head></html>"
 
-This is the same as:
+Easily register a mime type:
 
-    Minify::Parser.html("<html>    <head></head>   </html>")
+    Minify::Parser.register('text/plain') do |input, options|
+      options = {
+        :strip => true, :squeeze => true,
+        :lstrip => false, :rstrip => false,
+      }.merge(options)
+      
+      output = input.dup
+      output.strip! if options[:strip]
+      output.rstrip! if options[:rstrip]
+      output.lstrip! if options[:lstrip]
+      output.squeeze! if options[:squeeze]
+      output
+    end
+    
+    p Minify::Parser.plain("   Minify    me  please!  ") # => "Minify me please!"
+    p Minify::Parser.plain("   Minify    me  please!  ", :strip => false) # => " Minify me please! "
+
+> _WARNING_
+> The following isn't functional yet
 
 __Minify Directories__
 
