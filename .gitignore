@@ -1,3 +1,2 @@
 *.gemspec
-**/*.ignore_me
 pkg/**/*

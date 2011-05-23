@@ -5,7 +5,7 @@ require 'meta_tools'
 require 'pp'
 
 class Minify
-  VERSION = "0.1.4"
+  VERSION = "0.1.5"
 end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))

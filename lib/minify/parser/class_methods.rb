@@ -33,6 +33,10 @@ class Minify
         send((@index ||= {})[mime_type], input, options)
       end
       
+      def method_missing(meth, *args, &blk)
+        super # TODO
+      end
+      
     end
   end
 end

@@ -13,17 +13,13 @@ __Installation__
 
 `gem install minify`
 
-__Requiring__
-
-```ruby
-require 'minify'
-```
-
 ## Usage
 
 __Minify Strings By Mime Type__
 
 ```ruby
+require 'minify'
+
 Minify::Parser.html("<html>    <head></head>   </html>")
 ```
 
@@ -55,33 +51,83 @@ p Minify::Parser.plain("   Minify    me  please!  ") # => "Minify me please!"
 p Minify::Parser.plain("   Minify    me  please!  ", :strip => false) # => " Minify me please! "
 
 class Minify::Parser
-  register('foo/bar')
+  register('text/foobar') do |input|
+    "FOOBAR!"
+  end
 end
+
+p Minify::Parser.foobar("Hello world!") # => "FOOBAR!"
+p Minify::Parser.call("text/foobar", "...Hello world?") # => "FOOBAR!"
 ```
 
 > _WARNING_
-> The following isn't functional yet
+> The following isn't functional... yet
 
-__Minify Directories__
+__Minify Daemon__
 
-    Minify.minimize('public/index.html', 'public/js/**/*')
+```sh
+> cd proj_dir
+> minify add public/index.html public/js/**/*.js
 
-This will copy the files to `./.minimize-cache` and minimize the original files. 
-If the file we're trying to minimize already exists in the cache and the mtime 
-is the same, we leave it alone.
+Minify has added the following files to the watch list:
+  public/index.html
+  public/js/plugins.js
+  public/js/script.js
 
-Remember to add `.minimize-cache/**/*` to your `.gitignore` file.
+> minify start
 
-    Minify.maximize('public/index.html', 'public/js/**/*')
+Minify started
 
-If the file we're trying to maximize is in `./.minimize-cache`, then we return 
-that files's contents. If not, we simply return it's contents.
+> minify status
+
+Minify is running
+
+> minify stop
+
+Minify stopped
+
+> minify list
+
+Minify is watching:
+  public/index.html
+  public/js/plugins.js
+  public/js/script.js
+
+> minify add public/css/*.css
+
+Minify has added the following files to the watch list:
+  public/css/style.css
+  public/css/ie.css
+
+> minify remove plugins.js public/**/index.*
+
+Minify has removed the following files to the watch list:
+  public/js/plugins.js
+  public/index.html
+
+> minify list
+
+Minify is watching:
+  public/js/script.js
+  public/css/style.css
+  public/css/ie.css
+```
+
+All watched will copied to `proj_dir/.minify` and the original files will be 
+minimized. Whenever the files in `proj_dir/.minify` are changed, we update 
+the original files.
+
+Remember to add `.minify/**/*` to your `.gitignore` file if you're using git.
 
 __Minify Rack Responses__
 
 Minify also acts as Rack middleware:
 
+    require 'my_app'
+    require 'minify'
+    
     use Minify
+    run MyApp
 
 ## Contributing to gemology
 
