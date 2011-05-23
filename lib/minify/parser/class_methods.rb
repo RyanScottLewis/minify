@@ -10,7 +10,7 @@ class Minify
       # We are actually defining a method here so BE SURE to make the first
       # argument `input` and have it return your parsed output.
       # 
-      # One parser per mime type, so if you register a new method for 'text/html',
+      # One method per mime type, so if you register a new method for 'text/html',
       # then the old one will be overwritten with the new one.
       # 
       # @param [String, MIME::Type] mime_type The mime type of the input to parse.
@@ -20,10 +20,7 @@ class Minify
         mime_type = MIME::Types[mime_type].first unless mime_type.is_a?(MIME::Type)
         meth = mime_type.sub_type.gsub(/-/, "_").to_sym
         (@index ||= {})[mime_type.to_s] = meth
-        # TODO: This might be slower because when a block is /passed/ (&blk),
-        #       Ruby uses yield which is faster than /called/ or /given/.
-        #       Try meta_def(meth, &blk)
-        meta_def(meth) { |input, options={}| blk.call(input, options) }
+        meta_def(meth, &blk)
       end
       
       # Minify the input.
