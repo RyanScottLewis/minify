@@ -5,29 +5,18 @@ class Minify
       
       attr_reader :index
       
-      def register(mime_type, opts={}, &blk)
-        opts = { :require => nil }.merge(opts)
+      # Register a mime type and a method to parse it
+      # One per mime type.
+      def register(mime_type, options={}, &blk)
         mime_type = MIME::Types[mime_type].first unless mime_type.is_a?(MIME::Type)
         meth = mime_type.sub_type.gsub(/-/, "_").to_sym
-        
-        @index ||= {}
-        @index[mime_type.to_s] ||= {}
-        @index[mime_type.to_s] = @index[mime_type.to_s].merge({
-          
-        })
-        ## TOOODOOO
-        ()[mime_type.to_s] = meth
-        meta_def(meth, &blk)
+        (@index ||= {})[mime_type.to_s] = meth
+        meta_def(meth) { |input, options={}| blk.call(input, options) }
       end # Parser.register
       
-      def call(mime_type, input)
-        @index ||= {}
-        send(@index[mime_type], input)
+      def call(mime_type, input, options={})
+        send((@index ||= {})[mime_type], input, options)
       end # Parser.call
-      
-      #---
-      # HELPER METHODS
-      #+++
       
       # Try to require multiple libraries and return the first library that exists
       # and require it

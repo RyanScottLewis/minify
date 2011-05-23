@@ -5,17 +5,7 @@ require 'meta_tools'
 require 'pp'
 
 class Minify
-  VERSION = "0.1.3"
-  class Options
-    def Options.[](lib)
-      (@opts ||= {})[lib]
-    end
-    def Options.[]=(*libs, opts)
-      libs.each do |lib|
-        (@opts ||={})[lib] = opts
-      end
-    end
-  end
+  VERSION = "0.1.4"
 end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
