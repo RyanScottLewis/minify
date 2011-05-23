@@ -8,7 +8,7 @@ class Minify
       t.clean
     end
     
-    register 'text/css', :require => 'cssmin' do |input|
+    register 'text/css' do |input|
       require 'cssmin'
       CSSMin.minify(input)
     end

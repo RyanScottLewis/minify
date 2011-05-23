@@ -3,37 +3,39 @@ class Minify
     class << self
       include MetaTools
       
+      # @attr_reader [Hash] index The index of parsers. The key is the mime type and the value is the method to parse it.
       attr_reader :index
       
-      # Register a mime type and a method to parse it
-      # One per mime type.
-      def register(mime_type, options={}, &blk)
+      # Register a mime type and a method to parse it.
+      # We are actually defining a method here so BE SURE to make the first
+      # argument `input` and have it return your parsed output.
+      # 
+      # One parser per mime type, so if you register a new method for 'text/html',
+      # then the old one will be overwritten with the new one.
+      # 
+      # @param [String, MIME::Type] mime_type The mime type of the input to parse.
+      # @param [Hash] options Options that will be optionally passed to the method.
+      # @return [String] The input string, minified.
+      def register(mime_type, &blk)
         mime_type = MIME::Types[mime_type].first unless mime_type.is_a?(MIME::Type)
         meth = mime_type.sub_type.gsub(/-/, "_").to_sym
         (@index ||= {})[mime_type.to_s] = meth
+        # TODO: This might be slower because when a block is /passed/ (&blk),
+        #       Ruby uses yield which is faster than /called/ or /given/.
+        #       Try meta_def(meth, &blk)
         meta_def(meth) { |input, options={}| blk.call(input, options) }
-      end # Parser.register
+      end
       
+      # Minify the input.
+      # 
+      # @param [String, MIME::Type] mime_type The mime type of the input.
+      # @param [String] input The input string.
+      # @param [Hash] options Options to pass to the parser for the given mime type.
+      # @return [String] The input string, minified.
       def call(mime_type, input, options={})
         send((@index ||= {})[mime_type], input, options)
-      end # Parser.call
+      end
       
-      # Try to require multiple libraries and return the first library that exists
-      # and require it
-      def use(*libs)
-        lib = libs.find do |lib|
-          begin
-            require lib
-            true
-          rescue LoadError
-            false
-          end
-        end
-        raise(LoadError, "no such files to load -- #{libs.join(", ")}") if lib.nil?
-        
-        lib
-      end # Parser.use
-      
-    end # << self
-  end # Parser
+    end
+  end
 end
