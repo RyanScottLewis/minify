@@ -2,7 +2,7 @@
 
 __min·i·fy__ _verb_ _\ˈmi-nə-ˌfī\_ __:__ To minimize or reduce.
 
-Minify your files/strings/rack responses based on their mime type.
+Minify your files/strings/rack responses based on their MIME type.
 
 __Documentation__
 
@@ -15,7 +15,7 @@ __Installation__
 
 ## Usage
 
-__Minify Strings By Mime Type__
+__Minify Strings By MIME Type__
 
 ```ruby
 require 'minify'
@@ -30,7 +30,7 @@ Minify::Parser.call("text/html", "<html>    <head></head>   </html>")
 # => "<html><head></head></html>"
 ```
 
-Easily register a mime type:
+Easily register a MIME type:
 
 ```ruby
 Minify::Parser.register('text/plain') do |input, options|
@@ -123,11 +123,20 @@ __Minify Rack Responses__
 
 Minify also acts as Rack middleware:
 
-    require 'my_app'
-    require 'minify'
-    
-    use Minify
-    run MyApp
+```ruby
+require 'my_app'
+require 'minify'
+
+use Minify
+run MyApp
+```
+
+__Minify Templating Engines__
+
+Minify will automatically set the options of your required templating engines to
+minify it's output. If it doesn't have the option to, we patch the option 
+into it. Hopefully we can eventually send all patches upstream and eliminate the
+need for this.
 
 ## Contributing to minify
 
